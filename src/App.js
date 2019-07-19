@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Todo from './components/Todo';
-import todosData from './data/todosData';
 import './App.css';
+// import todosData from './data/todosData';
 
 class App extends Component {
 
@@ -9,7 +9,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      todos: todosData
+      todos: []
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -26,10 +26,21 @@ class App extends Component {
     })
   }
 
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then(res => res.json())
+      .then(data => this.setState({ todos: data }))
+  }
+  
+
   render() {
     return (
       <div className="todo-list">
-        { this.state.todos.map(todo => <Todo key={ todo.id } todo={ todo } handleClick={ this.handleClick } />) }
+        <h1>Todos</h1>
+        <hr/>
+        { this.state.todos.length ?
+            this.state.todos.map(todo => <Todo key={ todo.id } todo={ todo } handleClick={ this.handleClick } />):
+            <p>Loading...</p> }
       </div>
     );
   }
